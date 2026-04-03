@@ -87,7 +87,7 @@ export default function OverviewPanel({
   const activeResults   = results.filter((r) => !r.skipped && !r.loading);
   const filteredResults = results.map((r) => ({ ...r, videos: r.skipped || r.loading ? [] : applyVideoFilter(r.videos, videoFilter) }));
 
-  const totalViews     = filteredResults.reduce((s, r) => s + r.videos.reduce((a, v) => a + v.views, 0), 0);
+  const totalViews     = activeResults.reduce((s, r) => s + r.totalViews, 0);
   const totalLikes     = filteredResults.reduce((s, r) => s + r.videos.reduce((a, v) => a + (v.likes || 0), 0), 0);
   const totalComments  = filteredResults.reduce((s, r) => s + r.videos.reduce((a, v) => a + (v.comments || 0), 0), 0);
   const totalFollowers = activeResults.reduce((s, r) => s + (r.followers || 0), 0);
@@ -124,7 +124,7 @@ export default function OverviewPanel({
   });
 
   const METRICS = [
-    { label: "Total Views",     value: totalViews,     sub: FILTER_OPTIONS.find(f => f.value === videoFilter)?.label || "semua video", dot: "#3B82F6" },
+    { label: "Total Views",     value: totalViews,     sub: "gabungan semua platform",  dot: "#3B82F6" },
     { label: "Total Likes",     value: totalLikes,     sub: "gabungan",           dot: "#22C55E" },
     { label: "Total Comments",  value: totalComments,  sub: "gabungan",           dot: "#F59E0B" },
     { label: "Total Followers", value: totalFollowers, sub: "semua platform",     dot: "#A855F7" },
