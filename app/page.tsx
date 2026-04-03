@@ -303,7 +303,62 @@ export default function Dashboard() {
               <p className="text-sm font-500" style={{ color: "var(--text-2)" }}>Analisis performa kreator di YouTube, TikTok &amp; Instagram</p>
             </div>
 
-            {/* 3-field form */}
+            {/* Autocomplete — now on top */}
+            <div className="w-full max-w-lg relative" ref={centerRef}>
+              <form onSubmit={(e) => { e.preventDefault(); if (centerInput.trim()) { handleSearch(centerInput.trim()); setShowCSuggest(false); } }} className="flex gap-2">
+                <div className="relative flex-1">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "var(--text-4)" }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <input type="text" value={centerInput}
+                    onChange={(e) => { setCenterInput(e.target.value); setShowCSuggest(true); }}
+                    onFocus={(e) => { e.target.style.boxShadow = "var(--shadow)"; setShowCSuggest(true); }}
+                    onBlur={(e) => (e.target.style.boxShadow = "none")}
+                    placeholder="Cari kreator populer... (contoh: mrbeast)"
+                    className="w-full pl-11 pr-4 py-3 text-sm font-500 placeholder:text-[var(--text-4)] focus:outline-none"
+                    style={{ background: "var(--card)", border: "1.5px solid var(--border)", borderRadius: "10px", color: "var(--text-1)", transition: "box-shadow 0.15s" }}
+                  />
+                </div>
+                <button type="submit" disabled={!centerInput.trim()}
+                  className="px-5 py-3 text-sm font-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:opacity-80"
+                  style={{ background: "var(--accent)", color: "var(--accent-fg)", border: "1.5px solid var(--border)", borderRadius: "10px", boxShadow: centerInput.trim() ? "var(--shadow)" : "none" }}>
+                  Cari
+                </button>
+              </form>
+              {showCSuggest && centerSuggest.length > 0 && (
+                <div className="absolute left-0 right-0 z-50 overflow-hidden"
+                  style={{ bottom: "calc(100% + 8px)", background: "var(--card)", border: "1.5px solid var(--border)", borderRadius: "12px", boxShadow: "var(--shadow)" }}>
+                  {centerSuggest.map((c, i) => (
+                    <button key={c.username} type="button"
+                      onMouseDown={() => { setCenterInput(c.username); setShowCSuggest(false); handleSearch(c.username); }}
+                      className="w-full flex items-center justify-between px-4 py-3 text-left transition-colors"
+                      style={{ borderBottom: i < centerSuggest.length - 1 ? `1px solid var(--divider)` : "none" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--inner)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "")}>
+                      <div className="flex items-center gap-3">
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" style={{ color: "var(--text-4)" }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <div>
+                          <p className="text-sm font-700" style={{ color: "var(--text-1)" }}>{c.name}</p>
+                          <p className="text-xs font-500" style={{ color: "var(--text-3)" }}>@{c.username}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs font-600 shrink-0 hidden sm:block" style={{ color: "var(--text-3)" }}>{c.hint}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 w-full max-w-2xl">
+              <div className="flex-1 h-px" style={{ background: "var(--border-light)" }} />
+              <span className="text-xs font-600" style={{ color: "var(--text-4)" }}>atau cari per platform</span>
+              <div className="flex-1 h-px" style={{ background: "var(--border-light)" }} />
+            </div>
+
+            {/* 3-field form — now below */}
             <div className="w-full max-w-2xl p-5 md:p-6"
               style={{ background: "var(--card)", border: "1.5px solid var(--border)", borderRadius: "16px", boxShadow: "var(--shadow-lg)" }}>
               <p className="text-[11px] font-700 uppercase tracking-widest mb-4" style={{ color: "var(--text-3)" }}>Cari per platform</p>
@@ -342,61 +397,6 @@ export default function Dashboard() {
                 style={{ background: "var(--accent)", color: "var(--accent-fg)", border: "1.5px solid var(--border)", borderRadius: "10px", boxShadow: (ytInput || ttInput || igInput) ? "var(--shadow)" : "none" }}>
                 Analisis Sekarang
               </button>
-            </div>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 w-full max-w-2xl">
-              <div className="flex-1 h-px" style={{ background: "var(--border-light)" }} />
-              <span className="text-xs font-600" style={{ color: "var(--text-4)" }}>atau cari kreator populer</span>
-              <div className="flex-1 h-px" style={{ background: "var(--border-light)" }} />
-            </div>
-
-            {/* Autocomplete */}
-            <div className="w-full max-w-lg relative" ref={centerRef}>
-              <form onSubmit={(e) => { e.preventDefault(); if (centerInput.trim()) { handleSearch(centerInput.trim()); setShowCSuggest(false); } }} className="flex gap-2">
-                <div className="relative flex-1">
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "var(--text-4)" }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                  </svg>
-                  <input type="text" value={centerInput}
-                    onChange={(e) => { setCenterInput(e.target.value); setShowCSuggest(true); }}
-                    onFocus={(e) => { e.target.style.boxShadow = "var(--shadow)"; setShowCSuggest(true); }}
-                    onBlur={(e) => (e.target.style.boxShadow = "none")}
-                    placeholder="Cari kreator populer... (contoh: mrbeast)"
-                    className="w-full pl-11 pr-4 py-3 text-sm font-500 placeholder:text-[var(--text-4)] focus:outline-none"
-                    style={{ background: "var(--card)", border: "1.5px solid var(--border)", borderRadius: "10px", color: "var(--text-1)", transition: "box-shadow 0.15s" }}
-                  />
-                </div>
-                <button type="submit" disabled={!centerInput.trim()}
-                  className="px-5 py-3 text-sm font-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all hover:opacity-80"
-                  style={{ background: "var(--accent)", color: "var(--accent-fg)", border: "1.5px solid var(--border)", borderRadius: "10px", boxShadow: centerInput.trim() ? "var(--shadow)" : "none" }}>
-                  Cari
-                </button>
-              </form>
-              {showCSuggest && centerSuggest.length > 0 && (
-                <div className="absolute left-0 right-0 mt-2 z-50 overflow-hidden"
-                  style={{ background: "var(--card)", border: "1.5px solid var(--border)", borderRadius: "12px", boxShadow: "var(--shadow)" }}>
-                  {centerSuggest.map((c, i) => (
-                    <button key={c.username} type="button"
-                      onMouseDown={() => { setCenterInput(c.username); setShowCSuggest(false); handleSearch(c.username); }}
-                      className="w-full flex items-center justify-between px-4 py-3 text-left transition-colors"
-                      style={{ borderBottom: i < centerSuggest.length - 1 ? `1px solid var(--divider)` : "none" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--inner)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "")}>
-                      <div className="flex items-center gap-3">
-                        <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" style={{ color: "var(--text-4)" }} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        <div>
-                          <p className="text-sm font-700" style={{ color: "var(--text-1)" }}>{c.name}</p>
-                          <p className="text-xs font-500" style={{ color: "var(--text-3)" }}>@{c.username}</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-600 shrink-0 hidden sm:block" style={{ color: "var(--text-3)" }}>{c.hint}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         )}
